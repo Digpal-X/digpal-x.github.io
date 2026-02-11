@@ -15,11 +15,13 @@
     /* Accents */
     --neon-green: #00ff41;      /* Success/Structure */
     --neon-red: #ff3333;        /* Alert/Highlights */
+    --neon-purple: #bb86fc;     /* Encrypted/Cyber Purple */
     
     /* Effects */
     --font-stack: 'VT323', monospace;
     --glow-green: 0 0 10px rgba(0, 255, 65, 0.5);
     --glow-red: 0 0 10px rgba(255, 51, 51, 0.5);
+    --glow-purple: 0 0 10px rgba(187, 134, 252, 0.5);
     --border-style: 1px solid #333;
 }
 
@@ -71,7 +73,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 1.4rem; }
 .nav-links a:hover { color: var(--neon-green); text-shadow: var(--glow-green); }
 
-/* Hamburger (Hidden on Desktop) */
+/* Hamburger */
 .hamburger { display: none; cursor: pointer; }
 .hamburger .line { width: 25px; height: 3px; background: var(--neon-green); margin: 5px; transition: 0.3s; }
 
@@ -110,11 +112,48 @@ section { padding: 4rem 0; border-bottom: 1px dashed #222; }
 
 .skill-item { text-align: center; font-size: 1.5rem; }
 .project-header, .certification-logo { color: var(--neon-green); margin-bottom: 10px; font-size: 1.5rem; }
+.project-header { display: flex; justify-content: space-between; align-items: center; }
+
+/* --- Project Link Icon Colors (Integrated) --- */
+.project-links {
+    display: flex;
+    gap: 15px;
+}
+
+.project-links a {
+    color: var(--neon-purple);
+    text-shadow: var(--glow-purple);
+    transition: 0.3s ease;
+    text-decoration: none;
+    font-size: 1.4rem;
+}
+
+.project-links a:hover {
+    color: var(--neon-red);
+    text-shadow: var(--glow-red);
+    transform: scale(1.2) rotate(5deg);
+}
+
+.project-links i { color: inherit; }
+
 .project-tech span { font-size: 1rem; padding: 2px 8px; border: 1px solid; margin-right: 5px; }
 .tag-green { border-color: var(--neon-green); color: var(--neon-green); }
 .tag-red { border-color: var(--neon-red); color: var(--neon-red); }
 
-/* === TIMELINE (Education & Training) === */
+.status-tag {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+.status-tag i {
+    font-size: 0.6rem;
+    margin-right: 5px;
+    animation: pulse 1.5s infinite;
+}
+
+/* === TIMELINE === */
 .timeline {
     position: relative;
     max-width: 800px;
@@ -131,10 +170,7 @@ section { padding: 4rem 0; border-bottom: 1px dashed #222; }
     padding: 20px;
 }
 
-.timeline-item:hover {
-    border-color: var(--neon-red);
-    box-shadow: var(--glow-red);
-}
+.timeline-item:hover { border-color: var(--neon-red); box-shadow: var(--glow-red); }
 
 .timeline-icon {
     position: absolute;
@@ -153,6 +189,38 @@ section { padding: 4rem 0; border-bottom: 1px dashed #222; }
 .timeline-content h3 { color: var(--neon-green); font-size: 1.8rem; }
 .timeline-content h4 { color: var(--text-main); font-size: 1.4rem; }
 .timeline-date { display: inline-block; background: #222; padding: 2px 8px; font-size: 1rem; margin: 10px 0; color: var(--text-muted); }
+
+/* === CV DROPDOWN === */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--bg-panel);
+    min-width: 200px;
+    border: 1px solid var(--neon-red);
+    box-shadow: var(--glow-red);
+    z-index: 10;
+    margin-top: 5px;
+    left: 1rem;
+}
+.dropdown-content a {
+    color: var(--text-main);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #222;
+    transition: 0.3s;
+}
+.dropdown-content a i { margin-right: 10px; color: var(--neon-red); }
+.dropdown-content a:hover { background-color: var(--neon-red); color: var(--bg-black); }
+.dropdown-content a:hover i { color: var(--bg-black); }
+.show-dropdown { display: block !important; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 /* === CONTACT FORM === */
 .contact-form-container { max-width: 600px; margin: 0 auto; }
@@ -182,7 +250,6 @@ input:focus, textarea:focus { outline: none; border-color: var(--neon-red); box-
 }
 @keyframes scanline { 0% { top: -100px; } 100% { top: 100%; } }
 
-/* === KEY ROTATION ANIMATION (The Fix) === */
 .hero-image .fa-key {
     display: inline-block !important;
     animation: turnAndUnlock 4s infinite ease-in-out !important;
@@ -200,24 +267,14 @@ input:focus, textarea:focus { outline: none; border-color: var(--neon-red); box-
 /* === MOBILE RESPONSIVE === */
 @media (max-width: 768px) {
     .hero-content { flex-direction: column; text-align: center; }
-    
-    .hamburger { display: block; } /* Show hamburger */
-    
+    .hamburger { display: block; }
     .nav-links {
-        position: fixed;
-        right: -100%; /* Hidden by default */
-        top: 60px;
-        height: 100vh;
-        width: 100%;
-        background: var(--bg-black);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 50px;
-        transition: 0.3s ease-in-out;
-        border-left: 1px solid var(--neon-red);
+        position: fixed; right: -100%; top: 60px; height: 100vh; width: 100%;
+        background: var(--bg-black); flex-direction: column; justify-content: flex-start;
+        padding-top: 50px; transition: 0.3s ease-in-out; border-left: 1px solid var(--neon-red);
     }
-
-    .nav-links.nav-active {
-        right: 0; /* Slide in */
-    }
+    .nav-links.nav-active { right: 0; }
+    .cta-buttons { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+    .secondary-btn { margin-left: 0; }
+    .dropdown-content { left: 50%; transform: translateX(-50%); }
 }
