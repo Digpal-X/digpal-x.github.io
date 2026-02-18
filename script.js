@@ -120,24 +120,38 @@ function initScrollReveal() {
 /* --- 4. TEXT SCRAMBLER --- */
 function initTextScrambler() {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    
     document.querySelectorAll('.glitch, h2, .nav-links a').forEach(el => {
-        el.dataset.value = el.innerText;
-        el.addEventListener('mouseover', e => {
+        // 1. Remember the HTML (which holds the colors)
+        el.dataset.originalHtml = el.innerHTML; 
+        // 2. Remember the Text (for the scrambling effect)
+        el.dataset.value = el.innerText; 
+
+        el.addEventListener('mouseover', () => {
             let iter = 0;
-            const orig = e.target.dataset.value;
-            clearInterval(e.target.interval);
-            e.target.interval = setInterval(() => {
-                e.target.innerText = orig.split("")
-                    .map((l, i) => i < iter ? orig[i] : letters[Math.floor(Math.random() * 36)])
+            const origText = el.dataset.value;
+            const origHtml = el.dataset.originalHtml; // Get the colored version
+
+            clearInterval(el.interval);
+
+            el.interval = setInterval(() => {
+                // During animation: Show scrambled plain text
+                el.innerText = origText.split("")
+                    .map((l, i) => i < iter ? origText[i] : letters[Math.floor(Math.random() * 36)])
                     .join("");
-                if (iter >= orig.length)
-                    clearInterval(e.target.interval);
+
+                // When animation is done...
+                if (iter >= origText.length) {
+                    clearInterval(el.interval);
+                    // RESTORE THE COLORS!
+                    el.innerHTML = origHtml; 
+                }
+                
                 iter += 1 / 3;
             }, 30);
         });
     });
 }
-
 /* --- 5. TYPING & FORM --- */
 function initTypingEffect() {
     const p = document.querySelector('.prompt');
@@ -200,3 +214,37 @@ function initCVDownload() {
         });
     }
 }
+/* --- 7. MODAL LOGIC (New Feature) --- */
+const modal = document.getElementById('resume-modal');
+const modalFrame = document.getElementById('resume-frame');
+const modalTitle = document.getElementById('modal-filename');
+const modalDownload = document.getElementById('modal-download-btn');
+
+function openModal(pdfUrl, title) {
+    // 1. Set the Title
+    modalTitle.innerText = title;
+    
+    // 2. Load the PDF into the iframe
+    modalFrame.src = pdfUrl;
+    
+    // 3. Update the download button link so they can download if they want
+    modalDownload.href = pdfUrl;
+    
+    // 4. Show the modal
+    modal.style.display = 'flex';
+    
+    // 5. Close dropdown if open
+    document.getElementById('cv-dropdown-content').classList.remove('show-dropdown');
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+    modalFrame.src = ""; // Clear src to stop playing/loading
+}
+
+// Close modal if clicking outside the terminal window
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        closeModal();
+    }
+});
